@@ -9,9 +9,12 @@ public class MobSpawning : MonoBehaviour
     public Vector2 spawnOffset;        // how far from spawner to spawn
 
     private float timer;
+    private bool isSpawning = false;   // controls whether mobs spawn
 
     void Update()
     {
+        if (!isSpawning) return;       // only spawn if enabled
+
         timer += Time.deltaTime;
 
         if (timer >= spawnInterval)
@@ -34,5 +37,17 @@ public class MobSpawning : MonoBehaviour
         {
             follow.player = player; // Assign the entire GameObject (not Transform)
         }
+    }
+
+    // Call this from WaveManager
+    public void StartSpawning()
+    {
+        isSpawning = true;
+        timer = 0f;  // reset timer so it spawns immediately
+    }
+
+    public void StopSpawning()
+    {
+        isSpawning = false;
     }
 }
