@@ -3,47 +3,36 @@ using UnityEngine.Tilemaps;
 
 public class MobSpawning : MonoBehaviour
 {
-    public Tilemap tilemap;
-    public GameObject mobPrefab;
-    public Transform player;
-    public float spawnDelay = 2f;
+    public GameObject mobPrefab;       // prefab to spawn
+    public GameObject player;          // player reference as GameObject
+    public float spawnInterval = 3f;   // seconds between spawns
+    public Vector2 spawnOffset;        // how far from spawner to spawn
 
-    private bool _isSpawning = false;
+    private float timer;
 
-    public void StartSpawning()
+    void Update()
     {
-        if (_isSpawning) return;
-        InvokeRepeating(nameof(SpawnMob), 0f, spawnDelay);
-        _isSpawning = true;
-    }
+        timer += Time.deltaTime;
 
-    public void StopSpawning()
-    {
-        if (!_isSpawning) return;
-        CancelInvoke(nameof(SpawnMob));
-        _isSpawning = false;
+        if (timer >= spawnInterval)
+        {
+            SpawnMob();
+            timer = 0f;
+        }
     }
 
     void SpawnMob()
     {
-        if (tilemap == null || mobPrefab == null || player == null) return;
+        Vector3 spawnPos = (Vector2)transform.position + spawnOffset;
 
-        var bounds = tilemap.cellBounds;
-        Vector3Int randomCell = new Vector3Int(
-            Random.Range(bounds.xMin, bounds.xMax),
-            Random.Range(bounds.yMin, bounds.yMax),
-            0
-        );
-
-        if (!tilemap.HasTile(randomCell))
-            return;
-
-        Vector3 spawnPos = tilemap.GetCellCenterWorld(randomCell);
-
+        // Instantiate the mob prefab at the spawn position
         GameObject mob = Instantiate(mobPrefab, spawnPos, Quaternion.identity);
 
-        var follow = mob.GetComponent<MobFollowsPlayer>();
+        // Give the mob a reference to the player
+        MobFollowsPlayer follow = mob.GetComponent<MobFollowsPlayer>();
         if (follow != null)
-            follow.player = player;
+        {
+            follow.player = player; // Assign the entire GameObject (not Transform)
+        }
     }
 }
