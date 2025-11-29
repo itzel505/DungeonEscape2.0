@@ -3,36 +3,36 @@ using UnityEngine.Tilemaps;
 
 public class MobSpawning : MonoBehaviour
 {
-        public Tilemap tilemap;
-        public GameObject mobPrefab;
-        public Transform player;
-        public float spawnDelay = 2f;
+    public GameObject mobPrefab;       // prefab to spawn
+    public GameObject player;          // player reference as GameObject
+    public float spawnInterval = 3f;   // seconds between spawns
+    public Vector2 spawnOffset;        // how far from spawner to spawn
 
-        void Start()
+    private float timer;
+
+    void Update()
+    {
+        timer += Time.deltaTime;
+
+        if (timer >= spawnInterval)
         {
-            InvokeRepeating(nameof(SpawnMob), spawnDelay, spawnDelay);
+            SpawnMob();
+            timer = 0f;
         }
+    }
 
-        void SpawnMob()
+    void SpawnMob()
+    {
+        Vector3 spawnPos = (Vector2)transform.position + spawnOffset;
+
+        // Instantiate the mob prefab at the spawn position
+        GameObject mob = Instantiate(mobPrefab, spawnPos, Quaternion.identity);
+
+        // Give the mob a reference to the player
+        MobFollowsPlayer follow = mob.GetComponent<MobFollowsPlayer>();
+        if (follow != null)
         {
-            // Pick a random cell in the tilemap
-            var bounds = tilemap.cellBounds;
-            Vector3Int randomCell = new Vector3Int(
-                Random.Range(bounds.xMin, bounds.xMax),
-                Random.Range(bounds.yMin, bounds.yMax),
-                0
-            );
-
-            // Only spawn if tile exists
-            if (!tilemap.HasTile(randomCell))
-                return;
-
-            // Convert cell to world position
-            Vector3 spawnPos = tilemap.GetCellCenterWorld(randomCell);
-            
-            GameObject mob = Instantiate(mobPrefab, spawnPos, Quaternion.identity);
-
-            // Give the mob a target to follow
-            mob.GetComponent<MobFollowsPlayer>().player = player;
+            follow.player = player; // Assign the entire GameObject (not Transform)
         }
+    }
 }

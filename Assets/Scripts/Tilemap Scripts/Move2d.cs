@@ -118,6 +118,6 @@ public class Move2D : MonoBehaviour
     // Multiplies by Time.deltaTime for frame-rate independent movement
     private Vector3 CalculateMovementDelta()
     {
-        return (Vector3)(currentMovementInput * Speed * Time.deltaTime);
+        return (Vector3)(currentMovementInput * (Speed * Time.deltaTime));
     }
 }
