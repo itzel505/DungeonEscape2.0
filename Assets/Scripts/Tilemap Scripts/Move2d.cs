@@ -22,95 +22,54 @@ public class Move2D : MonoBehaviour
         UpdateSpriteDirection();
         ApplyMovement();
     }
-    
-    // Auto-assigns component references if they weren't set in the Inspector
+
     private void InitializeComponents()
     {
         if (SpriteRenderer == null)
             SpriteRenderer = GetComponent<SpriteRenderer>();
-        
+
         if (Animator == null)
             Animator = GetComponent<Animator>();
-        
+
         if (KeyboardInput == null)
             KeyboardInput = GetComponent<KeyboardInput>();
-        
+
         if (GamepadInput == null)
             GamepadInput = GetComponent<GamepadInput>();
     }
 
-    // Gamepad input takes priority over keyboard when active
     private void GetCombinedInput()
     {
-        Vector2 keyboardMovement = GetKeyboardMovement();
-        Vector2 gamepadMovement = GetGamepadMovement();
-        
-        if (HasGamepadInput(gamepadMovement))
-            currentMovementInput = gamepadMovement;
-        else
-            currentMovementInput = keyboardMovement;
-    }
+        Vector2 gamepadMovement = GamepadInput != null ? GamepadInput.GetMovement() : Vector2.zero;
+        Vector2 keyboardMovement = KeyboardInput != null ? KeyboardInput.GetMovement() : Vector2.zero;
 
-    private Vector2 GetKeyboardMovement()
-    {
-        if (KeyboardInput == null)
-            return Vector2.zero;
-        
-        return KeyboardInput.GetMovement();
-    }
-
-    private Vector2 GetGamepadMovement()
-    {
-        if (GamepadInput == null)
-            return Vector2.zero;
-        
-        return GamepadInput.GetMovement();
-    }
-
-    private bool HasGamepadInput(Vector2 gamepadMovement)
-    {
-        return gamepadMovement.sqrMagnitude > 0f;
+        // Gamepad takes priority when active
+        currentMovementInput = gamepadMovement.sqrMagnitude > 0f ? gamepadMovement : keyboardMovement;
     }
 
     private void UpdateAnimator()
     {
         if (Animator == null)
             return;
-        
-        bool isWalking = IsMoving();
+
+        bool isWalking = currentMovementInput.sqrMagnitude > 0f;
         Animator.SetBool("IsWalking", isWalking);
     }
 
-    private bool IsMoving()
-    {
-        return currentMovementInput.sqrMagnitude > 0f;
-    }
-
-    // Flips sprite horizontally based on movement direction (doesn't flip for vertical-only movement)
     private void UpdateSpriteDirection()
     {
         if (SpriteRenderer == null)
             return;
 
-        if (IsMovingLeft())
+        if (currentMovementInput.x < 0f)
             SpriteRenderer.flipX = true;
-        else if (IsMovingRight())
+        else if (currentMovementInput.x > 0f)
             SpriteRenderer.flipX = false;
     }
 
-    private bool IsMovingLeft()
-    {
-        return currentMovementInput.x < 0f;
-    }
-
-    private bool IsMovingRight()
-    {
-        return currentMovementInput.x > 0f;
-    }
-
-    // Directly modifies transform.position (not using physics)
     private void ApplyMovement()
     {
+<<<<<<< Updated upstream
         Vector3 movementDelta = CalculateMovementDelta();
         transform.position = transform.position + movementDelta;
     }
@@ -119,5 +78,9 @@ public class Move2D : MonoBehaviour
     private Vector3 CalculateMovementDelta()
     {
         return (Vector3)(currentMovementInput * Speed * Time.deltaTime);
+=======
+        Vector3 delta = (Vector3)(currentMovementInput * Speed * Time.deltaTime);
+        transform.position += delta;
+>>>>>>> Stashed changes
     }
 }

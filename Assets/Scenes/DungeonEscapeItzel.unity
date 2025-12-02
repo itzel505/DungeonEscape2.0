@@ -369,10 +369,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ec3801cd27384890a3c1c785e295225, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MobSpawning
+<<<<<<< Updated upstream
   tilemap: {fileID: 0}
   mobPrefab: {fileID: 0}
   player: {fileID: 0}
   spawnDelay: 2
+=======
+  mobPrefab: {fileID: 67848664932483190, guid: fa06b8569c53146e6a24acbfafa9fec6, type: 3}
+  player: {fileID: 1907183250}
+  spawnInterval: 2
+  minDistanceFromPlayer: 2
+  maxDistanceFromPlayer: 5
+>>>>>>> Stashed changes
 --- !u!4 &1332656553
 Transform:
   m_ObjectHideFlags: 0
@@ -388,6 +396,23 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+<<<<<<< Updated upstream
+=======
+--- !u!114 &1332656554
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1332656551}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 819c60302b3014b3089de731c1adb2ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WaveManager
+  mobSpawner: {fileID: 1332656552}
+  waves: []
+>>>>>>> Stashed changes
 --- !u!1 &1464226737
 GameObject:
   m_ObjectHideFlags: 0

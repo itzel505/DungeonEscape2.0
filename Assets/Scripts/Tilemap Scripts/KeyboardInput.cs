@@ -1,4 +1,3 @@
-
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -6,125 +5,62 @@ public class KeyboardInput : MonoBehaviour
 {
     public Vector2 GetMovement()
     {
-        if (IsKeyboardUnavailable())
-        {
+        if (Keyboard.current == null)
             return Vector2.zero;
-        }
 
-        float horizontalInput = GetHorizontalInput();
-        float verticalInput = GetVerticalInput();
+        float horizontal = GetHorizontalInput();
+        float vertical = GetVerticalInput();
 
-        Vector2 movement = new Vector2(horizontalInput, verticalInput);
-        // Normalize diagonal movement so player doesn't move faster diagonally
-        movement = AdjustForDiagonalMovement(movement);
-        
-        return movement;
+        Vector2 movement = new Vector2(horizontal, vertical);
+        return NormalizeIfDiagonal(movement);
     }
 
     public bool WasPickupButtonPressed()
     {
-        if (IsKeyboardUnavailable())
-        {
-            return false;
-        }
-        
-        return Keyboard.current[Key.E].wasPressedThisFrame;
+        return Keyboard.current != null && Keyboard.current[Key.E].wasPressedThisFrame;
     }
 
     public bool WasPlaceButtonPressed()
     {
-        if (IsKeyboardUnavailable())
-        {
-            return false;
-        }
-        
-        return Keyboard.current[Key.F].wasPressedThisFrame;
+        return Keyboard.current != null && Keyboard.current[Key.F].wasPressedThisFrame;
     }
-    
+
     public bool WasAttackButtonPressed()
     {
-        if (IsKeyboardUnavailable())
-        {
-            return false;
-        }
-        
-        return Keyboard.current[Key.LeftShift].wasPressedThisFrame;
+        return Keyboard.current != null && Keyboard.current[Key.LeftShift].wasPressedThisFrame;
     }
 
-    private bool IsKeyboardUnavailable()
-    {
-        return Keyboard.current == null;
-    }
-
-    // Returns -1 for left (A), +1 for right (D), or 0 for neither/both
     private float GetHorizontalInput()
     {
         float horizontal = 0f;
-        
-        if (IsLeftKeyPressed())
-        {
-            horizontal = horizontal - 1f;
-        }
-        
-        if (IsRightKeyPressed())
-        {
-            horizontal = horizontal + 1f;
-        }
-        
+
+        if (Keyboard.current.aKey.isPressed)
+            horizontal -= 1f;
+
+        if (Keyboard.current.dKey.isPressed)
+            horizontal += 1f;
+
         return horizontal;
     }
 
-    // Returns -1 for down (S), +1 for up (W), or 0 for neither/both
     private float GetVerticalInput()
     {
         float vertical = 0f;
-        
-        if (IsUpKeyPressed())
-        {
-            vertical = vertical + 1f;
-        }
-        
-        if (IsDownKeyPressed())
-        {
-            vertical = vertical - 1f;
-        }
-        
+
+        if (Keyboard.current.wKey.isPressed)
+            vertical += 1f;
+
+        if (Keyboard.current.sKey.isPressed)
+            vertical -= 1f;
+
         return vertical;
     }
 
-    private bool IsLeftKeyPressed()
+    private Vector2 NormalizeIfDiagonal(Vector2 movement)
     {
-        return Keyboard.current.aKey.isPressed;
-    }
-
-    private bool IsRightKeyPressed()
-    {
-        return Keyboard.current.dKey.isPressed;
-    }
-
-    private bool IsUpKeyPressed()
-    {
-        return Keyboard.current.wKey.isPressed;
-    }
-
-    private bool IsDownKeyPressed()
-    {
-        return Keyboard.current.sKey.isPressed;
-    }
-
-    private Vector2 AdjustForDiagonalMovement(Vector2 movement)
-    {
-        if (IsDiagonalMovement(movement))
-        {
+        if (movement.sqrMagnitude > 1f)
             movement.Normalize();
-        }
-        
-        return movement;
-    }
 
-    // sqrMagnitude > 1 means both X and Y have values (diagonal movement)
-    private bool IsDiagonalMovement(Vector2 movement)
-    {
-        return movement.sqrMagnitude > 1f;
+        return movement;
     }
 }

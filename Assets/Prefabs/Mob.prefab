@@ -179,4 +179,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MobFollowsPlayer
   player: {fileID: 0}
+<<<<<<< Updated upstream:Assets/Prefabs/Mob.prefab
   speed: 2
+=======
+  moveSpeed: 0.8
+  damage: 10
+  knockbackForce: 1.2
+  knockbackDuration: 0.1
+>>>>>>> Stashed changes:Assets/Prefabs/SkeletonMob.prefab
