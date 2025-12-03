@@ -2,67 +2,71 @@ using UnityEngine;
 
 public class MobFollowsPlayer : MonoBehaviour
 {
+    [Header("Movement")]
     public GameObject player;
     public float moveSpeed = 2f;
+
+    [Header("Combat")]
     public int damage = 10;
     public float knockbackForce = 3f;
     public float knockbackDuration = 0.2f;
 
     private Rigidbody2D rb;
-    private bool isKnockedBack = false;
+    private bool isKnockedBack;
     private float knockbackTimer;
 
-    void Start()
+    private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
 
-        // Automatically find the player if not assigned in the Inspector
         if (player == null)
-        {
-            GameObject p = GameObject.FindWithTag("Player");
-            if (p != null)
-                player = p;
-        }
+            player = GameObject.FindWithTag("Player");
     }
 
-    void Update()
+    private void Update()
     {
-        if (player == null) return;
+        if (player == null)
+            return;
 
-        // While knocked back, pause following behavior
         if (isKnockedBack)
         {
             knockbackTimer -= Time.deltaTime;
-            if (knockbackTimer <= 0)
+            if (knockbackTimer <= 0f)
                 isKnockedBack = false;
-
-            return; // stop following the player during knockback
+            return;
         }
 
-        // Follow player with simple movement
+        FollowPlayer();
+    }
+
+    private void FollowPlayer()
+    {
         Vector3 direction = (player.transform.position - transform.position).normalized;
-        transform.position += direction * (moveSpeed * Time.deltaTime);
+        transform.position += direction * moveSpeed * Time.deltaTime;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.collider.CompareTag("Player"))
-        {
-            // Damage the player
-            PlayerHealth health = collision.collider.GetComponent<PlayerHealth>();
-            if (health != null)
-                health.TakeDamage(damage);
+        if (!collision.collider.CompareTag("Player"))
+            return;
 
-            // Knockback this mob
-            Knockback(collision.transform.position);
-        }
+        DamagePlayer(collision.collider);
+        ApplyKnockback(collision.transform.position);
     }
 
-    void Knockback(Vector3 playerPos)
+    private void DamagePlayer(Collider2D playerCollider)
     {
-        if (rb == null) return;
+        PlayerHealth health = playerCollider.GetComponent<PlayerHealth>();
+        if (health != null)
+            health.TakeDamage(damage);
+    }
 
-        Vector2 knockDirection = (transform.position - playerPos).normalized;
+    private void ApplyKnockback(Vector3 playerPosition)
+    {
+        if (rb == null)
+            return;
+
+        Vector2 knockDirection = (transform.position - playerPosition).normalized;
         rb.AddForce(knockDirection * knockbackForce, ForceMode2D.Impulse);
 
         isKnockedBack = true;
