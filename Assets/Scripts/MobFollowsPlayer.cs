@@ -30,7 +30,8 @@ public class MobFollowsPlayer : MonoBehaviour
     private void MoveTowardsPlayer()
     {
         Vector2 direction = (player.transform.position - transform.position).normalized;
-        rb.linearVelocity = direction * moveSpeed;
+        // Use 'velocity' for Unity 2022/2021. Use 'linearVelocity' for Unity 6.
+        rb.velocity = direction * moveSpeed;
     }
 
     // ---------------------------------------------------------
@@ -46,16 +47,16 @@ public class MobFollowsPlayer : MonoBehaviour
         isKnockedBack = true;
 
         // 1. Reset velocity to ensure clean knockback
-        rb.linearVelocity = Vector2.zero;
+        rb.velocity = Vector2.zero;
 
-        // 2. Apply the force
+        // 2. Apply the force to the MOB
         rb.AddForce(direction * force, ForceMode2D.Impulse);
 
         // 3. Wait for the duration
         yield return new WaitForSeconds(duration);
 
         // 4. Regain control
-        rb.linearVelocity = Vector2.zero;
+        rb.velocity = Vector2.zero;
         isKnockedBack = false;
     }
 }
