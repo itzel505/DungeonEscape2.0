@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class MobSpawning : MonoBehaviour
 {
@@ -7,11 +8,12 @@ public class MobSpawning : MonoBehaviour
     public float spawnInterval = 3f;
 
     [Header("Spawn Area")]
-    [Tooltip("Mobs won't spawn closer than this distance from player")]
-    public float minDistanceFromPlayer = 5f;
-    
-    [Tooltip("Mobs won't spawn farther than this distance from player")]
-    public float maxDistanceFromPlayer = 10f;
+    public float minDistanceFromPlayer = 2f;
+    public float maxDistanceFromPlayer = 5f;
+
+    [Header("Collision Detection")]
+    public Tilemap collisionTilemap;
+    public int maxSpawnAttempts = 30;
 
     private float timer;
     private bool isSpawning;
@@ -46,12 +48,28 @@ public class MobSpawning : MonoBehaviour
         if (mobPrefab == null || player == null)
             return;
 
-        Vector3 spawnPos = GetRandomSpawnPosition();
-        GameObject mob = Instantiate(mobPrefab, spawnPos, Quaternion.identity);
+        for (int i = 0; i < maxSpawnAttempts; i++)
+        {
+            Vector3 spawnPos = GetRandomSpawnPosition();
 
-        MobFollowsPlayer followScript = mob.GetComponent<MobFollowsPlayer>();
-        if (followScript != null)
-            followScript.player = player;
+            // Check BEFORE spawning
+            if (IsOnCollisionTilemap(spawnPos))
+                continue;
+
+            GameObject mob = Instantiate(mobPrefab, spawnPos, Quaternion.identity);
+
+            MobFollowsPlayer followScript = mob.GetComponent<MobFollowsPlayer>();
+            if (followScript != null)
+                followScript.player = player;
+
+            // Add stuck checker to the mob
+            MobSpawnStuckChecker stuckChecker = mob.AddComponent<MobSpawnStuckChecker>();
+            stuckChecker.Initialize(collisionTilemap);
+
+            return;
+        }
+
+        Debug.LogWarning("MobSpawning: Could not find valid spawn position after " + maxSpawnAttempts + " attempts");
     }
 
     private Vector3 GetRandomSpawnPosition()
@@ -64,5 +82,14 @@ public class MobSpawning : MonoBehaviour
 
         Vector3 playerPos = player.transform.position;
         return new Vector3(playerPos.x + offsetX, playerPos.y + offsetY, 0f);
+    }
+
+    private bool IsOnCollisionTilemap(Vector3 position)
+    {
+        if (collisionTilemap == null)
+            return false;
+
+        Vector3Int cellPos = collisionTilemap.WorldToCell(position);
+        return collisionTilemap.HasTile(cellPos);
     }
 }

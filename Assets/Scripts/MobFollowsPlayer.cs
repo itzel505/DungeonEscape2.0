@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class MobFollowsPlayer : MonoBehaviour
 {
@@ -6,70 +7,55 @@ public class MobFollowsPlayer : MonoBehaviour
     public GameObject player;
     public float moveSpeed = 2f;
 
-    [Header("Combat")]
-    public int damage = 10;
-    public float knockbackForce = 3f;
-    public float knockbackDuration = 0.2f;
-
     private Rigidbody2D rb;
-    private bool isKnockedBack;
-    private float knockbackTimer;
+    private bool isKnockedBack = false;
 
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-
         if (player == null)
             player = GameObject.FindWithTag("Player");
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
-        if (player == null)
-            return;
+        if (player == null) return;
 
-        if (isKnockedBack)
-        {
-            knockbackTimer -= Time.deltaTime;
-            if (knockbackTimer <= 0f)
-                isKnockedBack = false;
-            return;
-        }
+        // If we are currently bouncing back, DO NOT run movement logic.
+        if (isKnockedBack) return;
 
-        FollowPlayer();
+        MoveTowardsPlayer();
     }
 
-    private void FollowPlayer()
+    private void MoveTowardsPlayer()
     {
-        Vector3 direction = (player.transform.position - transform.position).normalized;
-        transform.position += direction * moveSpeed * Time.deltaTime;
+        Vector2 direction = (player.transform.position - transform.position).normalized;
+        rb.linearVelocity = direction * moveSpeed;
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    // ---------------------------------------------------------
+    // PUBLIC FUNCTION: Called by MobDamage
+    // ---------------------------------------------------------
+    public void TriggerKnockback(Vector2 direction, float force, float duration)
     {
-        if (!collision.collider.CompareTag("Player"))
-            return;
-
-        DamagePlayer(collision.collider);
-        ApplyKnockback(collision.transform.position);
+        StartCoroutine(KnockbackRoutine(direction, force, duration));
     }
 
-    private void DamagePlayer(Collider2D playerCollider)
+    private IEnumerator KnockbackRoutine(Vector2 direction, float force, float duration)
     {
-        PlayerHealth health = playerCollider.GetComponent<PlayerHealth>();
-        if (health != null)
-            health.TakeDamage(damage);
-    }
-
-    private void ApplyKnockback(Vector3 playerPosition)
-    {
-        if (rb == null)
-            return;
-
-        Vector2 knockDirection = (transform.position - playerPosition).normalized;
-        rb.AddForce(knockDirection * knockbackForce, ForceMode2D.Impulse);
-
         isKnockedBack = true;
-        knockbackTimer = knockbackDuration;
+
+        // 1. Reset velocity to ensure clean knockback
+        rb.linearVelocity = Vector2.zero;
+
+        // 2. Apply the force
+        rb.AddForce(direction * force, ForceMode2D.Impulse);
+
+        // 3. Wait for the duration
+        yield return new WaitForSeconds(duration);
+
+        // 4. Regain control
+        rb.linearVelocity = Vector2.zero;
+        isKnockedBack = false;
     }
 }

@@ -195,6 +195,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MobDamage
   damage: 10
   knockbackForce: 5
+  knockbackDuration: 0.4
 --- !u!114 &6764223732812467696
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -208,4 +209,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MobFollowsPlayer
   player: {fileID: 0}
-  moveSpeed: 1
+  moveSpeed: 1.2
