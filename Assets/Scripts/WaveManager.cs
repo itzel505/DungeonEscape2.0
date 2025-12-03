@@ -5,13 +5,8 @@ public class WaveManager : MonoBehaviour
 {
     public MobSpawning mobSpawner;
 
-<<<<<<< Updated upstream
-    public float wave1Duration = 60f;
-    public float restAfterWave1 = 60f;
-=======
     [Header("Wave Settings")]
     public WaveConfig[] waves;
->>>>>>> Stashed changes
 
     [System.Serializable]
     public class WaveConfig
@@ -22,8 +17,6 @@ public class WaveManager : MonoBehaviour
     }
 
     private int currentWaveIndex;
-
-    private int currentWave = 0;
 
     private void Start()
     {
@@ -45,28 +38,6 @@ public class WaveManager : MonoBehaviour
 
     private IEnumerator RunWaves()
     {
-<<<<<<< Updated upstream
-        // WAVE 1
-        currentWave = 1;
-        mobSpawner.StartSpawning();
-        yield return new WaitForSeconds(wave1Duration);
-
-        mobSpawner.StopSpawning();
-        yield return new WaitForSeconds(restAfterWave1);
-
-        // WAVE 2
-        currentWave = 2;
-        mobSpawner.StartSpawning();
-        yield return new WaitForSeconds(wave2Duration);
-
-        mobSpawner.StopSpawning();
-        yield return new WaitForSeconds(restAfterWave2);
-
-        // WAVE 3
-        currentWave = 3;
-        mobSpawner.StartSpawning();
-        yield return new WaitForSeconds(wave3Duration);
-=======
         for (int i = 0; i < waves.Length; i++)
         {
             currentWaveIndex = i;
@@ -86,7 +57,6 @@ public class WaveManager : MonoBehaviour
                 yield return new WaitForSeconds(wave.restDurationAfter);
             }
         }
->>>>>>> Stashed changes
 
         Debug.Log("All waves completed!");
     }

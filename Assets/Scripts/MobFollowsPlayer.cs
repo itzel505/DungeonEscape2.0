@@ -2,10 +2,6 @@ using UnityEngine;
 
 public class MobFollowsPlayer : MonoBehaviour
 {
-<<<<<<< Updated upstream
-    public Transform player;
-    public float speed = 2f;
-=======
     [Header("Movement")]
     public GameObject player;
     public float moveSpeed = 2f;
@@ -26,22 +22,9 @@ public class MobFollowsPlayer : MonoBehaviour
         if (player == null)
             player = GameObject.FindWithTag("Player");
     }
->>>>>>> Stashed changes
 
     private void Update()
     {
-<<<<<<< Updated upstream
-        if (player == null) return;
-        
-        
-
-        // Move toward the player
-        transform.position = Vector3.MoveTowards(
-            transform.position,
-            player.position,
-            speed * Time.deltaTime
-        );
-=======
         if (player == null)
             return;
 
@@ -60,12 +43,8 @@ public class MobFollowsPlayer : MonoBehaviour
     {
         Vector3 direction = (player.transform.position - transform.position).normalized;
         transform.position += direction * moveSpeed * Time.deltaTime;
->>>>>>> Stashed changes
     }
-}
 
-<<<<<<< Updated upstream
-=======
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (!collision.collider.CompareTag("Player"))
@@ -94,4 +73,3 @@ public class MobFollowsPlayer : MonoBehaviour
         knockbackTimer = knockbackDuration;
     }
 }
->>>>>>> Stashed changes

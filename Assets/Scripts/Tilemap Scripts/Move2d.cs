@@ -69,18 +69,7 @@ public class Move2D : MonoBehaviour
 
     private void ApplyMovement()
     {
-<<<<<<< Updated upstream
-        Vector3 movementDelta = CalculateMovementDelta();
-        transform.position = transform.position + movementDelta;
-    }
-
-    // Multiplies by Time.deltaTime for frame-rate independent movement
-    private Vector3 CalculateMovementDelta()
-    {
-        return (Vector3)(currentMovementInput * Speed * Time.deltaTime);
-=======
         Vector3 delta = (Vector3)(currentMovementInput * Speed * Time.deltaTime);
         transform.position += delta;
->>>>>>> Stashed changes
     }
 }
