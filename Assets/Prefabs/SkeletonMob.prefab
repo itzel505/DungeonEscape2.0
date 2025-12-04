@@ -15,6 +15,8 @@ GameObject:
   - component: {fileID: 7172656617636360593}
   - component: {fileID: -2351144484561144849}
   - component: {fileID: 6764223732812467696}
+  - component: {fileID: 2062254309556947763}
+  - component: {fileID: -8529569233247024044}
   m_Layer: 0
   m_Name: SkeletonMob
   m_TagString: Enemy
@@ -196,6 +198,7 @@ MonoBehaviour:
   damage: 10
   knockbackForce: 5
   knockbackDuration: 0.4
+  collisionDamageFromPlayer: 10
 --- !u!114 &6764223732812467696
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -210,3 +213,37 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MobFollowsPlayer
   player: {fileID: 0}
   moveSpeed: 1.2
+--- !u!114 &2062254309556947763
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 67848664932483190}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd280b2a2a5b64674bb5c71fc5d890e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MobHealth
+  maxHealth: 30
+  healthBarOffset: {x: 0, y: 0.2, z: 0}
+  healthBarSize: {x: 0.5, y: 0.08}
+  hideWhenFull: 0
+  backgroundColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
+  fillColor: {r: 0.8, g: 0.2, b: 0.2, a: 1}
+  sortingOrder: 100
+--- !u!114 &-8529569233247024044
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 67848664932483190}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d12a5e02da294e2386a59aa85e2a1c6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HideInDarkness
+  lightRadius: 5
+  visibilityBuffer: 0.5
+  fadeSpeed: 5
