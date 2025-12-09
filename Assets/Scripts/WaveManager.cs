@@ -5,46 +5,114 @@ public class WaveManager : MonoBehaviour
 {
     public MobSpawning mobSpawner;
 
-    [Header("Wave Durations (seconds)")]
-    public float wave1Duration = 60f;
-    public float restAfterWave1 = 60f;
+    [Header("Wave Settings")]
+    public WaveConfig[] waves;
 
-    public float wave2Duration = 60f;
-    public float restAfterWave2 = 60f;
+    [System.Serializable]
+    public class WaveConfig
+    {
+        public string waveName = "Wave";
+        public float duration = 60f;
+        public float restDurationAfter = 60f;
+    }
 
-    public float wave3Duration = 180f; // 3 minutes
+    // UI-accessible state
+    private int currentWaveIndex;
+    private float timeRemaining;
+    private bool isResting;
+    private bool wavesCompleted;
 
     private void Start()
     {
+        if (waves == null || waves.Length == 0)
+            SetDefaultWaves();
+
         StartCoroutine(RunWaves());
+    }
+
+    private void SetDefaultWaves()
+    {
+        waves = new WaveConfig[]
+        {
+            new WaveConfig { waveName = "Wave 1", duration = 60f, restDurationAfter = 60f },
+            new WaveConfig { waveName = "Wave 2", duration = 60f, restDurationAfter = 60f },
+            new WaveConfig { waveName = "Wave 3", duration = 180f, restDurationAfter = 0f }
+        };
     }
 
     private IEnumerator RunWaves()
     {
-        // WAVE 1
-        Debug.Log("Starting Wave 1");
-        mobSpawner.StartSpawning();
-        yield return new WaitForSeconds(wave1Duration);
+        for (int i = 0; i < waves.Length; i++)
+        {
+            currentWaveIndex = i;
+            WaveConfig wave = waves[i];
 
-        Debug.Log("Wave 1 ended. Resting...");
-        mobSpawner.StopSpawning();
-        yield return new WaitForSeconds(restAfterWave1);
+            // Start wave
+            Debug.Log($"Starting {wave.waveName}");
+            isResting = false;
+            mobSpawner.StartSpawning();
 
-        // WAVE 2
-        Debug.Log("Starting Wave 2");
-        mobSpawner.StartSpawning();
-        yield return new WaitForSeconds(wave2Duration);
+            // Count down wave duration
+            timeRemaining = wave.duration;
+            while (timeRemaining > 0f)
+            {
+                timeRemaining -= Time.deltaTime;
+                yield return null;
+            }
 
-        Debug.Log("Wave 2 ended. Resting...");
-        mobSpawner.StopSpawning();
-        yield return new WaitForSeconds(restAfterWave2);
+            mobSpawner.StopSpawning();
+            Debug.Log($"{wave.waveName} ended");
 
-        // WAVE 3
-        Debug.Log("Starting Wave 3");
-        mobSpawner.StartSpawning();
-        yield return new WaitForSeconds(wave3Duration);
+            // Rest period
+            if (wave.restDurationAfter > 0f)
+            {
+                Debug.Log($"Rest period: {wave.restDurationAfter} seconds");
+                isResting = true;
+                timeRemaining = wave.restDurationAfter;
+                
+                while (timeRemaining > 0f)
+                {
+                    timeRemaining -= Time.deltaTime;
+                    yield return null;
+                }
+            }
+        }
 
-        mobSpawner.StopSpawning();
-        Debug.Log("All waves finished!");
+        wavesCompleted = true;
+        Debug.Log("All waves completed!");
+    }
+
+    // ========== PUBLIC GETTERS FOR UI ==========
+
+    public int GetCurrentWaveNumber()
+    {
+        return currentWaveIndex + 1;
+    }
+
+    public int GetTotalWaves()
+    {
+        return waves != null ? waves.Length : 0;
+    }
+
+    public float GetTimeRemaining()
+    {
+        return Mathf.Max(0f, timeRemaining);
+    }
+
+    public bool IsResting()
+    {
+        return isResting;
+    }
+
+    public bool AreWavesCompleted()
+    {
+        return wavesCompleted;
+    }
+
+    public string GetCurrentWaveName()
+    {
+        if (waves == null || currentWaveIndex >= waves.Length)
+            return "Unknown";
+        return waves[currentWaveIndex].waveName;
     }
 }

@@ -1,71 +1,62 @@
 using UnityEngine;
+using System.Collections;
 
 public class MobFollowsPlayer : MonoBehaviour
 {
+    [Header("Movement")]
     public GameObject player;
     public float moveSpeed = 2f;
-    public int damage = 10;
-    public float knockbackForce = 3f;
-    public float knockbackDuration = 0.2f;
 
     private Rigidbody2D rb;
     private bool isKnockedBack = false;
-    private float knockbackTimer;
 
-    void Start()
+    private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-
-        // Automatically find the player if not assigned in the Inspector
         if (player == null)
-        {
-            GameObject p = GameObject.FindWithTag("Player");
-            if (p != null)
-                player = p;
-        }
+            player = GameObject.FindWithTag("Player");
     }
 
-    void Update()
+    private void FixedUpdate()
     {
         if (player == null) return;
 
-        // While knocked back, pause following behavior
-        if (isKnockedBack)
-        {
-            knockbackTimer -= Time.deltaTime;
-            if (knockbackTimer <= 0)
-                isKnockedBack = false;
+        // If we are currently bouncing back, DO NOT run movement logic.
+        if (isKnockedBack) return;
 
-            return; // stop following the player during knockback
-        }
-
-        // Follow player with simple movement
-        Vector3 direction = (player.transform.position - transform.position).normalized;
-        transform.position += direction * (moveSpeed * Time.deltaTime);
+        MoveTowardsPlayer();
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void MoveTowardsPlayer()
     {
-        if (collision.collider.CompareTag("Player"))
-        {
-            // Damage the player
-            PlayerHealth health = collision.collider.GetComponent<PlayerHealth>();
-            if (health != null)
-                health.TakeDamage(damage);
-
-            // Knockback this mob
-            Knockback(collision.transform.position);
-        }
+        Vector2 direction = (player.transform.position - transform.position).normalized;
+        // Use 'velocity' for Unity 2022/2021. Use 'linearVelocity' for Unity 6.
+        rb.linearVelocity = direction * moveSpeed;
     }
 
-    void Knockback(Vector3 playerPos)
+    // ---------------------------------------------------------
+    // PUBLIC FUNCTION: Called by MobDamage
+    // ---------------------------------------------------------
+    public void TriggerKnockback(Vector2 direction, float force, float duration)
     {
-        if (rb == null) return;
+        StartCoroutine(KnockbackRoutine(direction, force, duration));
+    }
 
-        Vector2 knockDirection = (transform.position - playerPos).normalized;
-        rb.AddForce(knockDirection * knockbackForce, ForceMode2D.Impulse);
-
+    private IEnumerator KnockbackRoutine(Vector2 direction, float force, float duration)
+    {
         isKnockedBack = true;
-        knockbackTimer = knockbackDuration;
+
+        // 1. Reset velocity to ensure clean knockback
+        rb.linearVelocity = Vector2.zero;
+
+        // 2. Apply the force to the MOB
+        rb.AddForce(direction * force, ForceMode2D.Impulse);
+
+        // 3. Wait for the duration
+        yield return new WaitForSeconds(duration);
+
+        // 4. Regain control
+        rb.linearVelocity = Vector2.zero;
+        isKnockedBack = false;
     }
 }
