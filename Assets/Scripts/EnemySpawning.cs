@@ -93,4 +93,9 @@ public class EnemySpawning : MonoBehaviour
         Vector3Int cellPos = collisionTilemap.WorldToCell(position);
         return collisionTilemap.HasTile(cellPos);
     }
+    
+    public void SetSpawnInterval(float interval)
+    {
+        spawnInterval = interval;
+    }
 }

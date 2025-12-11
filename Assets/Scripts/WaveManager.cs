@@ -14,6 +14,7 @@ public class WaveManager : MonoBehaviour
         public string waveName = "Wave";
         public float duration = 60f;
         public float restDurationAfter = 60f;
+        public float spawnInterval = 3f;
     }
 
     // UI-accessible state
@@ -34,9 +35,9 @@ public class WaveManager : MonoBehaviour
     {
         waves = new WaveConfig[]
         {
-            new WaveConfig { waveName = "Wave 1", duration = 60f, restDurationAfter = 5f },
-            new WaveConfig { waveName = "Wave 2", duration = 60f, restDurationAfter = 10f },
-            new WaveConfig { waveName = "Wave 3", duration = 180f, restDurationAfter = 15f }
+            new WaveConfig { waveName = "Wave 1", duration = 60f, restDurationAfter = 5f, spawnInterval = 3f },
+            new WaveConfig { waveName = "Wave 2", duration = 60f, restDurationAfter = 10f, spawnInterval = 2f },
+            new WaveConfig { waveName = "Wave 3", duration = 180f, restDurationAfter = 15f, spawnInterval = 1f }
         };
     }
 
@@ -50,6 +51,7 @@ public class WaveManager : MonoBehaviour
             // Start wave
             Debug.Log($"Starting {wave.waveName}");
             isResting = false;
+            mobSpawner.SetSpawnInterval(wave.spawnInterval);
             mobSpawner.StartSpawning();
 
             // Count down wave duration
