@@ -11,12 +11,12 @@ public class EnemyDamage : MonoBehaviour
     public int collisionDamageFromPlayer = 10;
 
     private EnemyFollowsPlayer movementScript;
-    private EnemyHealth enemyHealth;
+    private EnemyHealth mobHealth;
 
     private void Start()
     {
         movementScript = GetComponent<EnemyFollowsPlayer>();
-        enemyHealth = GetComponent<EnemyHealth>();
+        mobHealth = GetComponent<EnemyHealth>();
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
