@@ -1,11 +1,10 @@
 using UnityEngine;
 
 public class Projectile : MonoBehaviour
-    
 {
     public float speed = 10f;
     public int damage = 20;
-    public float lifetime = 2f;  // destroy after 2 seconds
+    public float lifetime = 2f;
 
     private Vector2 direction;
 
@@ -21,20 +20,19 @@ public class Projectile : MonoBehaviour
 
     void Update()
     {
-        transform.Translate(direction * (speed * Time.deltaTime));
+        // Move in world space
+        transform.Translate(direction * (speed * Time.deltaTime), Space.World);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        // If it hits a mob
-        if (collision.CompareTag("Mob"))
+        if (collision.CompareTag("Enemy"))
         {
-            // If the mob has health, apply damage
-            var health = collision.GetComponent<MobHealth>();
+            var health = collision.GetComponent<EnemyHealth>();
             if (health != null)
                 health.TakeDamage(damage);
 
-            Destroy(gameObject); // Remove projectile
+            Destroy(gameObject);
         }
     }
 }

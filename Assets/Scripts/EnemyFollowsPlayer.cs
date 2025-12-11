@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class MobFollowsPlayer : MonoBehaviour
+public class EnemyFollowsPlayer : MonoBehaviour
 {
     [Header("Movement")]
     public GameObject player;

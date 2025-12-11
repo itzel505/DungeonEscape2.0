@@ -51,7 +51,7 @@ public class MobSpawnStuckChecker : MonoBehaviour
         if (distanceMoved < stuckThreshold)
         {
             // Double check - are we actually trying to move?
-            MobFollowsPlayer followScript = GetComponent<MobFollowsPlayer>();
+            EnemyFollowsPlayer followScript = GetComponent<EnemyFollowsPlayer>();
             if (followScript != null && followScript.player != null)
             {
                 float distanceToPlayer = Vector3.Distance(transform.position, followScript.player.transform.position);
