@@ -11,6 +11,10 @@ public class PlayerHealth : MonoBehaviour
     public SpriteRenderer spriteRenderer;
     public float flashDuration = 0.1f;
     private Color defaultColor;
+    
+    [Header("Potion Pickup")]
+    public int healAmount = 20; // NEW: How much a potion heals the player
+
 
     private void Start()
     {
@@ -67,5 +71,19 @@ public class PlayerHealth : MonoBehaviour
     {
         Debug.Log("Player died!");
         // TODO: Add death logic (respawn, game over screen, etc.)
+    }
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        //  Check if we collided with a potion
+        if (collision.CompareTag("Potion"))
+        {
+            Debug.Log("Player picked up a potion!");
+
+            // Heal the player
+            Heal(healAmount);
+
+            // Remove the potion from the map
+            Destroy(collision.gameObject);
+        }
     }
 }
