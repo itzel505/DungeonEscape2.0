@@ -1,22 +1,22 @@
 using UnityEngine;
 
-public class MobDamage : MonoBehaviour
+public class EnemyDamage : MonoBehaviour
 {
-    [Header("Combat - Mob Deals")]
+    [Header("Combat - Enemy Deals")]
     public int damage = 10;
     public float knockbackForce = 5f;
     public float knockbackDuration = 0.2f;
 
-    [Header("Combat - Mob Receives")]
+    [Header("Combat - Enemy Receives")]
     public int collisionDamageFromPlayer = 10;
 
-    private MobFollowsPlayer movementScript;
-    private MobHealth mobHealth;
+    private EnemyFollowsPlayer movementScript;
+    private EnemyHealth enemyHealth;
 
     private void Start()
     {
-        movementScript = GetComponent<MobFollowsPlayer>();
-        mobHealth = GetComponent<MobHealth>();
+        movementScript = GetComponent<EnemyFollowsPlayer>();
+        enemyHealth = GetComponent<EnemyHealth>();
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
