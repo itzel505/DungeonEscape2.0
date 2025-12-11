@@ -1,9 +1,10 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.Tilemaps;
 
-public class MobSpawning : MonoBehaviour
+public class EnemySpawning : MonoBehaviour
 {
-    public GameObject mobPrefab;
+    [FormerlySerializedAs("mobPrefab")] public GameObject enemyPrefab;
     public GameObject player;
     public float spawnInterval = 3f;
 
@@ -27,7 +28,7 @@ public class MobSpawning : MonoBehaviour
 
         if (timer >= spawnInterval)
         {
-            SpawnMob();
+            SpawnEnemy();
             timer = 0f;
         }
     }
@@ -43,9 +44,9 @@ public class MobSpawning : MonoBehaviour
         isSpawning = false;
     }
 
-    private void SpawnMob()
+    private void SpawnEnemy()
     {
-        if (mobPrefab == null || player == null)
+        if (enemyPrefab == null || player == null)
             return;
 
         for (int i = 0; i < maxSpawnAttempts; i++)
@@ -56,20 +57,20 @@ public class MobSpawning : MonoBehaviour
             if (IsOnCollisionTilemap(spawnPos))
                 continue;
 
-            GameObject mob = Instantiate(mobPrefab, spawnPos, Quaternion.identity);
+            GameObject enemy = Instantiate(enemyPrefab, spawnPos, Quaternion.identity);
 
-            MobFollowsPlayer followScript = mob.GetComponent<MobFollowsPlayer>();
+            EnemyFollowsPlayer followScript = enemy.GetComponent<EnemyFollowsPlayer>();
             if (followScript != null)
                 followScript.player = player;
 
             // Add stuck checker to the mob
-            MobSpawnStuckChecker stuckChecker = mob.AddComponent<MobSpawnStuckChecker>();
+            MobSpawnStuckChecker stuckChecker = enemy.AddComponent<MobSpawnStuckChecker>();
             stuckChecker.Initialize(collisionTilemap);
 
             return;
         }
 
-        Debug.LogWarning("MobSpawning: Could not find valid spawn position after " + maxSpawnAttempts + " attempts");
+        Debug.LogWarning("EnemySpawning: Could not find valid spawn position after " + maxSpawnAttempts + " attempts");
     }
 
     private Vector3 GetRandomSpawnPosition()

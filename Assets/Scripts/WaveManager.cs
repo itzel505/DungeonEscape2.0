@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class WaveManager : MonoBehaviour
 {
-    public MobSpawning mobSpawner;
+    public EnemySpawning mobSpawner;
 
     [Header("Wave Settings")]
     public WaveConfig[] waves;
