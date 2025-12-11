@@ -31707,6 +31707,59 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!1 &495646892
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 495646893}
+  - component: {fileID: 495646894}
+  m_Layer: 0
+  m_Name: GameAudio
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &495646893
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 495646892}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 913.9514, y: 498.63156, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &495646894
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 495646892}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eda7fe9d7ae744d2099b6d453b41ad39, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameAudio
+  playerFootstep: {fileID: 8300000, guid: c851bf85255ee48b39ec8ad79d57af0e, type: 3}
+  enemyFootstep: {fileID: 8300000, guid: 9c9081409c87443f0bb4d109397fe451, type: 3}
+  collisionSound: {fileID: 8300000, guid: 4804978ddc0ac41b9b1b01b9a8be546d, type: 3}
+  playerFootstepVolume: 0.5
+  enemyFootstepVolume: 0.4
+  collisionVolume: 0.7
+  playerFootstepInterval: 0.35
+  enemyFootstepInterval: 0.4
+  maxHearingDistance: 10
 --- !u!1 &640792225
 GameObject:
   m_ObjectHideFlags: 0
@@ -65496,3 +65549,4 @@ SceneRoots:
   - {fileID: 1313528656}
   - {fileID: 1655404765}
   - {fileID: 640792230}
+  - {fileID: 495646893}

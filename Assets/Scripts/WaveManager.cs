@@ -34,9 +34,9 @@ public class WaveManager : MonoBehaviour
     {
         waves = new WaveConfig[]
         {
-            new WaveConfig { waveName = "Wave 1", duration = 60f, restDurationAfter = 60f },
-            new WaveConfig { waveName = "Wave 2", duration = 60f, restDurationAfter = 60f },
-            new WaveConfig { waveName = "Wave 3", duration = 180f, restDurationAfter = 0f }
+            new WaveConfig { waveName = "Wave 1", duration = 60f, restDurationAfter = 5f },
+            new WaveConfig { waveName = "Wave 2", duration = 60f, restDurationAfter = 10f },
+            new WaveConfig { waveName = "Wave 3", duration = 180f, restDurationAfter = 15f }
         };
     }
 

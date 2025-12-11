@@ -23,16 +23,20 @@ public class MobDamage : MonoBehaviour
     {
         if (collision.collider.CompareTag("Player"))
         {
-            // 1. DAMAGE THE PLAYER
+            // 1. PLAY COLLISION SOUND
+            if (GameAudio.Instance != null)
+                GameAudio.Instance.PlayCollision();
+
+            // 2. DAMAGE THE PLAYER
             PlayerHealth playerHealth = collision.collider.GetComponent<PlayerHealth>();
             if (playerHealth != null)
                 playerHealth.TakeDamage(damage);
 
-            // 2. DAMAGE THE MOB
+            // 3. DAMAGE THE MOB
             if (mobHealth != null)
                 mobHealth.TakeDamage(collisionDamageFromPlayer);
 
-            // 3. APPLY KNOCKBACK TO MOB (Recoil)
+            // 4. APPLY KNOCKBACK TO MOB (Recoil)
             if (movementScript != null)
             {
                 Vector2 direction = (transform.position - collision.transform.position).normalized;
